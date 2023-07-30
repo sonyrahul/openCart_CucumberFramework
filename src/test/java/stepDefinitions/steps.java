@@ -1,10 +1,13 @@
 package stepDefinitions;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
@@ -15,7 +18,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -43,17 +45,24 @@ public class steps {
 
 
     @Before
-    public void setup()    //Junit hook - executes once before starting
+    public void setup() throws IOException //Junit hook - executes before starting
     {
-        //for logging
+    	//For Logging
         logger= LogManager.getLogger(this.getClass());
-        //Reading config.properties (for browser)
+        
+        /*
+        //Reading config.properties (for browser) Approach1
         rb=ResourceBundle.getBundle("config");
         br=rb.getString("browser");
+        */
+        
+        //Reading config.properties (for browser) Approach2
+        File src = new File(".\\src\\test\\resources\\config.properties");
+        FileInputStream fis = new FileInputStream(src);
+        Properties pro = new Properties();
+        pro.load(fis);
+        br = pro.getProperty("browser");
       
-        macc=new MyAccountPage(driver);
-                
-
     }
 
     @After
